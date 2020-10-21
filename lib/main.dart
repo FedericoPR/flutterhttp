@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     print("Ha respondido :-)");
     return (js);
   }
-
+ //meter un comp stateful que soporte un texto, set estate y repintas
   MyApp(){
     print("constructor");
     var s = consultar().then((x){
