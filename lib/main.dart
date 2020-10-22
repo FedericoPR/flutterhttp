@@ -1,45 +1,67 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import'package:flutter/material.dart';
+import'package:http/http.dart'as http;
+
+Future<String> consultar() async{
+
+  print("Lanzar la peticion");
+  var respuesta = await http.get('https://jsonplaceholder.typicode.com/posts/1');
+
+  // sample info available in response
+  int statusCode = respuesta.statusCode;
+  Map<String, String> headers = respuesta.headers;
+  String contentType = headers['content-type'];
+  String js = respuesta.body;print(statusCode.toString()+"\n"+ headers.toString()+"\n"+ js.toString());
+  print(respuesta.toString());
+
+  return js;
+
+}
+
+void main(){
+  consultar().then( (x){
+    print( "===============================\n LA RESPUESTA ES "+x);
+  });
+  runApp(MyApp());}
 
 
-void main() => runApp(MyApp());
-class MyApp extends StatelessWidget {
+// UI -----------------------------------------
+class MyApp extends StatefulWidget{
 
-  Future<String> consultar() async{
-    print("Ha respondido :-)");
-    var respuesta = await http.get('https://jsonplaceholder.typicode.com/posts/1');
-    // sample info available in response
-    int statusCode = respuesta.statusCode;
-    Map<String, String> headers = respuesta.headers;
-    String contentType = headers['content-type'];
-    String js = respuesta.body;
-    print(statusCode.toString()+"\n"+ headers.toString()+"\n"+ js.toString());
-    print(respuesta.toString());
-
-    print("Ha respondido :-)");
-    return (js);
+  @override
+  State<MyApp> createState() {
+    print("Constructor MyApp");
+    return new MyAppState();//el estado ---> otra clase
   }
- //meter un comp stateful que soporte un texto, set estate y repintas
-  MyApp(){
-    print("constructor");
-    var s = consultar().then((x){
-      print(x);
-    });
-    print(s.toString());
+}
+
+class MyAppState extends State<MyApp> {
+
+  String _ms=" Loading... ";
+
+  MyAppState(){
+    print("Costructor del State");
+    consultar().then(
+      (x){
+        print(" ======== \n LOTENGO!" + x);
+        setState(() {
+          _ms = x;
+        });
+      }
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Welcome to Flutter',
+      title: 'App',
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Welcome to Flutter'),
+       appBar: AppBar(
+       title: Text('Sateful widget'),
         ),
         body: Center(
-          child: Text('Hello World'),
+          child: Text(_ms),
         ),
-      ),
+     ),
     );
   }
 }
