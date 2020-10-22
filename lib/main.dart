@@ -1,21 +1,7 @@
 import'package:flutter/material.dart';
 import'package:http/http.dart'as http;
 
-Future<String> consultar() async{
 
-  print("Lanzar la peticion");
-  var respuesta = await http.get('https://jsonplaceholder.typicode.com/posts/1');
-
-  // sample info available in response
-  int statusCode = respuesta.statusCode;
-  Map<String, String> headers = respuesta.headers;
-  String contentType = headers['content-type'];
-  String js = respuesta.body;print(statusCode.toString()+"\n"+ headers.toString()+"\n"+ js.toString());
-  print(respuesta.toString());
-
-  return js;
-
-}
 
 void main(){
   consultar().then( (x){
@@ -37,7 +23,26 @@ class MyApp extends StatefulWidget{
 class MyAppState extends State<MyApp> {
 
   String _ms=" Loading... ";
+  String texto = null;
+  var cambiar = false;
+  final myController = TextEditingController();
 
+  Future<String> consultar() async{
+
+    print("Lanzar la peticion");
+    var respuesta = await http.get(texto);
+
+    // sample info available in response
+    int statusCode = respuesta.statusCode;
+    Map<String, String> headers = respuesta.headers;
+    String contentType = headers['content-type'];
+    String js = respuesta.body;print(statusCode.toString()+"\n"+ headers.toString()+"\n"+ js.toString());
+    print(respuesta.toString());
+
+    return js;
+
+  }
+  /*
   MyAppState(){
     print("Costructor del State");
     consultar().then(
@@ -47,6 +52,20 @@ class MyAppState extends State<MyApp> {
           _ms = x;
         });
       }
+    );
+  }
+  */
+
+  void click() {
+    texto = myController.text.toString();
+    consultar().then((x) {//x valor 0 o 1 en String
+      setState(() {
+        if(x=="0")
+          cambiar = false;
+        else
+          cambiar =true;
+      });
+    }
     );
   }
 
@@ -64,8 +83,14 @@ class MyAppState extends State<MyApp> {
               children: [
                 Container(
                   child:
-                  Icon(Icons.check_circle)
-                  ,
+                  Row(
+                    children: [
+                      if(cambiar)
+                        Icon(Icons.check_circle)
+                      else
+                        Icon(Icons.remove_circle_outlined)
+                    ],
+                  ),
                 ),
                 Container(
                   child:
@@ -86,15 +111,12 @@ class MyAppState extends State<MyApp> {
                     color: Colors.blueAccent,
                     onPressed: ()  {
                       print("Check");
-                      setState(() {
-                        texto = myController.text.toString();
-                      });
                     },
-                  ),
+                  )
+                  ,
                 )
               ],
             )
-          ,
         ),
      ),
     );
