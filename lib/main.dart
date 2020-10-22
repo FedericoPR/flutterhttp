@@ -59,7 +59,42 @@ class MyAppState extends State<MyApp> {
        title: Text('Sateful widget'),
         ),
         body: Center(
-          child: Text(_ms),
+          child:
+            Row(
+              children: [
+                Container(
+                  child:
+                  Icon(Icons.check_circle)
+                  ,
+                ),
+                Container(
+                  child:
+                  TextField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Text',
+                    ),
+                    controller: myController,
+                ),
+                ),
+                Container(
+                  child:
+                  RaisedButton(
+                    disabledColor: Colors.amber,
+                    child: Text("Check"),
+                    splashColor: Colors.amber,
+                    color: Colors.blueAccent,
+                    onPressed: ()  {
+                      print("Check");
+                      setState(() {
+                        texto = myController.text.toString();
+                      });
+                    },
+                  ),
+                )
+              ],
+            )
+          ,
         ),
      ),
     );
